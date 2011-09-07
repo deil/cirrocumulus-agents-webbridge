@@ -40,7 +40,7 @@ ontologies.each do |ontology_name|
   require File.join(AGENT_ROOT, 'ontologies', ontology_name.underscore)
 end
 
-cm = Cirrocumulus.new('master')
+cm = Cirrocumulus.new('webbridge')
 a = Agent::Base.new(cm)
 a.load_ontologies(agent_config['ontologies'])
 begin

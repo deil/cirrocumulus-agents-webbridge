@@ -15,7 +15,7 @@ class WebbridgeOntology < Ontology::Base
     requests = ApiRequest.list_new_requests()
     requests.each do |request|
       msg = Cirrocumulus::Message.new(nil, request.action, request.content)
-      msg.ontology = "zalupa" #request.ontology
+      msg.ontology = request.ontology
       msg.reply_with = "api-request-" + request.id.to_s
       self.agent.send_message(msg)
       ApiRequest.mark_request_sent(request)
@@ -23,6 +23,18 @@ class WebbridgeOntology < Ontology::Base
   end
 
   def handle_message(message, kb)
+    if message && message.in_reply_to
+      request_id = message.in_reply_to.gsub('api-request-', '').to_i
+      request = ApiRequest.find_by_id(request_id)
+
+      if request
+        request.reply = Sexpistol.new.to_sexp(message.content)
+        request.reply_action = message.act
+        request.reply_agent = message.sender
+        request.updated_at = Time.now
+        ApiRequest.mark_request_complete(request)
+      end
+    end
   end
 
   private

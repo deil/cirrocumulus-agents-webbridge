@@ -5,3 +5,11 @@ Cirrocumulus (http://github.com/deil/cirrocumulus) is an agent-based infrastruct
 Webbridge agent was designed to assist stateless programs (e.g. PHP/RoR scripts) to interact with CM.
 This agent connects to message bus, periodically checks MySQL table for new requests and forwards them to CM.
 When request is finished, agent updates corresponding row in database. Simple!
+
+= Configuration
+This agent expects file config/webbridge_config.rb, which should contain folowing constants:
+DBSERVER = <hostname or ip of mysql server>
+DBUSER = <user name to connect with>
+DBPASSWORD = <user's password>
+DBNAME = <database>
+DBTABLE = <table which contains request>
