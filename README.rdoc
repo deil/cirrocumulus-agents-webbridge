@@ -8,8 +8,14 @@ When request is finished, agent updates corresponding row in database. Simple!
 
 = Configuration
 This agent expects file config/webbridge_config.rb, which should contain folowing constants:
+
 DBSERVER = <hostname or ip of mysql server>
+
 DBUSER = <user name to connect with>
+
 DBPASSWORD = <user's password>
+
 DBNAME = <database>
+
 DBTABLE = <table which contains request>
+
