@@ -1,0 +1,7 @@
+= Cirrocumulus
+Cirrocumulus (http://github.com/deil/cirrocumulus) is an agent-based infrastructure management system.
+
+= Webbridge Agent
+Webbridge agent was designed to assist stateless programs (e.g. PHP/RoR scripts) to interact with CM.
+This agent connects to message bus, periodically checks MySQL table for new requests and forwards them to CM.
+When request is finished, agent updates corresponding row in database. Simple!
