@@ -1,0 +1,25 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activesupport (2.3.14)
+    cirrocumulus (0.1.4)
+      activesupport (~> 2.3.11)
+      deil_sexpistol
+      log4r (~> 1.1.9)
+      systemu
+      xmpp4r (~> 0.5)
+      xmpp4r-simple (~> 0.8.8)
+    deil_sexpistol (0.0.8)
+    log4r (1.1.9)
+    mysql2 (0.3.7)
+    systemu (2.4.0)
+    xmpp4r (0.5)
+    xmpp4r-simple (0.8.8)
+      xmpp4r (>= 0.3.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  cirrocumulus (~> 0.1.4)
+  mysql2

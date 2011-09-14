@@ -2,6 +2,7 @@ AGENT_ROOT = File.dirname(__FILE__)
 
 require 'config/jabber_config.rb'
 require 'rubygems'
+require 'bundler/setup'
 require 'yaml'
 require 'cirrocumulus'
 require 'cirrocumulus/logger'
