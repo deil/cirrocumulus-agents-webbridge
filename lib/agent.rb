@@ -43,10 +43,25 @@ ontologies.each do |ontology_name|
 end
 
 cm = Cirrocumulus.new('webbridge')
-a = Agent::Base.new(cm)
+
+class SpyAgent < Agent::Base
+  def handles_ontology?(ontology)
+    true
+  end
+  
+  def handle_message(message, kb)
+    super(message, kb)
+    self.ontologies.each {|ontology| ontology.handle_incoming_message(message, kb) }
+  rescue Exception => e
+    Log4r::Logger['agent'].warn "failed to handle incoming message: %s" % e.to_s
+    puts e.backtrace.to_s
+  end
+end
+
+a = SpyAgent.new(cm)
 a.load_ontologies(agent_config['ontologies'])
 begin
-  cm.run(a, Kb.new)
+  cm.run(a, Kb.new, true)
 rescue Exception => e
   puts 'Got an error:'
   puts e

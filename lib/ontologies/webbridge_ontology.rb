@@ -1,4 +1,6 @@
 require 'rubygems'
+require 'awesome_print'
+
 require File.join(AGENT_ROOT, 'config/webbridge_config.rb')
 require File.join(AGENT_ROOT, 'ontologies/webbridge/api_request.rb')
 
@@ -6,7 +8,7 @@ class WebbridgeOntology < Ontology::Base
   def initialize(agent)
     super('cirrocumulus-webbridge', agent)
   end
-
+  
   def restore_state()
     ApiRequest.connect()
   end
@@ -32,6 +34,7 @@ class WebbridgeOntology < Ontology::Base
         request.reply_action = message.act
         request.reply_agent = message.sender
         request.updated_at = Time.now
+        logger.info "request %d completed" % request.id
         ApiRequest.mark_request_complete(request)
       end
     end

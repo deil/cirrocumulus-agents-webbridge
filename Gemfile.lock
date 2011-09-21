@@ -2,7 +2,8 @@ GEM
   remote: http://rubygems.org/
   specs:
     activesupport (2.3.14)
-    cirrocumulus (0.1.4)
+    awesome_print (0.4.0)
+    cirrocumulus (0.2.3)
       activesupport (~> 2.3.11)
       deil_sexpistol
       log4r (~> 1.1.9)
@@ -21,5 +22,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cirrocumulus (~> 0.1.4)
+  awesome_print
+  cirrocumulus (~> 0.2.3)
   mysql2
