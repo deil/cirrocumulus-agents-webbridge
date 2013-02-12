@@ -1,71 +1,32 @@
-AGENT_ROOT = File.dirname(__FILE__)
-
-require 'config/jabber_config.rb'
-require 'rubygems'
 require 'bundler/setup'
-require 'yaml'
 require 'cirrocumulus'
-require 'cirrocumulus/logger'
-require 'cirrocumulus/engine'
-require 'cirrocumulus/kb'
-require 'cirrocumulus/ontology'
-require 'cirrocumulus/master_agent'
+require 'log4r'
+require_relative 'ontologies/webbridge_ontology'
 
-class String
-  def underscore
-    self.gsub(/::/, '/').
-    gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-    gsub(/([a-z\d])([A-Z])/,'\1_\2').
-    tr("-", "_").
-    downcase
-  end
-end
+Encoding.default_internal = Encoding.default_external = "UTF-8"
 
-ontologies_file_name = nil
+agent_logger = Log4r::Logger.new('agent')
+agent_logger.outputters = Log4r::Outputter.stdout
 
-ARGV.each_with_index do |arg, i|
-  if arg == '-c'
-    ontologies_file_name = ARGV[i + 1]
-  end
-end
+channels_logger = Log4r::Logger.new('channels')
+channels_logger.outputters = Log4r::Outputter.stdout
 
-if ontologies_file_name.nil?
-  puts "Please supply config file name"
-  return
-end
+jabber_logger = Log4r::Logger.new('channels::jabber')
 
-puts "Loading configuration.."
-agent_config = YAML.load_file(ontologies_file_name)
-ontologies = agent_config['ontologies']
-ontologies.each do |ontology_name|
-  puts "Will load ontology %s" % ontology_name
-  require File.join(AGENT_ROOT, 'ontologies', ontology_name.underscore)
-end
+ontology_logger = Log4r::Logger.new('ontology')
+ontology_logger.outputters = Log4r::Outputter.stdout
 
-cm = Cirrocumulus.new('webbridge')
+run_queue_logger = Log4r::Logger.new('ontology::run_queue')
 
-class SpyAgent < Agent::Base
-  def handles_ontology?(ontology)
-    true
-  end
-  
-  def handle_message(message, kb)
-    super(message, kb)
-    self.ontologies.each {|ontology| ontology.handle_incoming_message(message, kb) }
-  rescue Exception => e
-    Log4r::Logger['agent'].warn "failed to handle incoming message: %s" % e.to_s
-    puts e.backtrace.to_s
-  end
-end
+my_logger = Log4r::Logger.new('ontology::bridge')
 
-a = SpyAgent.new(cm)
-a.load_ontologies(agent_config['ontologies'])
-begin
-  cm.run(a, Kb.new, true)
-rescue Exception => e
-  puts 'Got an error:'
-  puts e
-  puts e.backtrace
-end
+JabberChannel::server '172.16.11.4'
+JabberChannel::password 'q1w2e3r4'
+JabberChannel::conference 'cirrocumulus'
 
-puts "\nBye-bye."
+agent = Cirrocumulus::Environment.new(`hostname`.chomp)
+agent.load_ontology(WebBridgeOntology.new(Agent.network('bridge')))
+agent.run
+
+gets
+agent.join

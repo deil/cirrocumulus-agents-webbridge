@@ -1,27 +1,33 @@
+GIT
+  remote: git://github.com/blaine/xmpp4r-simple.git
+  revision: 92e2cd0002ec3a9a38506527e1a3a2d622408626
+  specs:
+    xmpp4r-simple (0.8.8)
+      xmpp4r (>= 0.3.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (2.3.14)
-    awesome_print (0.4.0)
-    cirrocumulus (0.2.3)
-      activesupport (~> 2.3.11)
-      deil_sexpistol
-      log4r (~> 1.1.9)
+    awesome_print (1.0.2)
+    cirrocumulus (0.9.11)
+      deil_sexpistol (>= 0.0.9)
+      guid
+      log4r
       systemu
-      xmpp4r (~> 0.5)
-      xmpp4r-simple (~> 0.8.8)
-    deil_sexpistol (0.0.8)
-    log4r (1.1.9)
-    mysql2 (0.3.7)
-    systemu (2.4.0)
+      xmpp4r
+      xmpp4r-simple
+    deil_sexpistol (0.0.9)
+    guid (0.1.1)
+    log4r (1.1.10)
+    mysql2 (0.3.11)
+    systemu (2.5.2)
     xmpp4r (0.5)
-    xmpp4r-simple (0.8.8)
-      xmpp4r (>= 0.3.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   awesome_print
-  cirrocumulus (~> 0.2.3)
+  cirrocumulus (= 0.9.11)
   mysql2
+  xmpp4r-simple!

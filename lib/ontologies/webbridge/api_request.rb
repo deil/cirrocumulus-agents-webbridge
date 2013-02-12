@@ -59,7 +59,6 @@ class ApiRequest
     nil
   end
 
-
   def self.disconnect()
     @@client.close()
   end

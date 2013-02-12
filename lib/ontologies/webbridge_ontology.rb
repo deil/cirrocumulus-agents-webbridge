@@ -1,26 +1,20 @@
-require 'rubygems'
-require 'awesome_print'
+require_relative '../config/webbridge_config'
+require_relative 'webbridge/api_request'
+require_relative 'webbridge/perform_request_saga'
 
-require File.join(AGENT_ROOT, 'config/webbridge_config.rb')
-require File.join(AGENT_ROOT, 'ontologies/webbridge/api_request.rb')
+class WebBridgeOntology < Ontology
 
-class WebbridgeOntology < Ontology::Base
-  def initialize(agent)
-    super('cirrocumulus-webbridge', agent)
-  end
-  
-  def restore_state()
+  ontology 'webbridge'
+
+  def restore_state
     ApiRequest.connect()
   end
 
-  def tick()
+  def tick
     requests = ApiRequest.list_new_requests()
+    logger.info "got %d new requests" % requests.size
     requests.each do |request|
-      msg = Cirrocumulus::Message.new(nil, request.action, request.content)
-      msg.ontology = request.ontology
-      msg.reply_with = "api-request-" + request.id.to_s
-      self.agent.send_message(msg)
-      ApiRequest.mark_request_sent(request)
+      create_saga(PerformRequestSaga).start(request)
     end
   end
 
@@ -41,5 +35,9 @@ class WebbridgeOntology < Ontology::Base
   end
 
   private
+
+  def logger
+    Log4r::Logger['ontology::bridge']
+  end
 
 end
