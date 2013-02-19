@@ -17,7 +17,9 @@ class PerformRequestSaga < Saga
 
   def send_request
     logger.info "sending request #{@request.inspect}"
-    @ontology.query(Agent.all, Sexpistol.new.parse_string(@request.content), {:ontology => @request.ontology, :conversation_id => self.id})
+    @ontology.query(Agent.all, Sexpistol.new.parse_string(@request.content), {:ontology => @request.ontology, :conversation_id => self.id}) if @request.action == 'query'
+    @ontology.inform(Agent.all, Sexpistol.new.parse_string(@request.content), {:ontology => @request.ontology, :conversation_id => self.id}) if @request.action == 'inform'
+    @ontology.request(Agent.all, Sexpistol.new.parse_string(@request.content), {:ontology => @request.ontology, :conversation_id => self.id}) if @request.action == 'request'
     ApiRequest.mark_request_sent(@request)
   end
 
